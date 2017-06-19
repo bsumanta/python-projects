@@ -9,40 +9,43 @@ file_actual=sys.argv[2]
 book_expected = xlrd.open_workbook(file_expected)
 sheet_expected = book_expected.sheet_by_index(0)
 
-book_actual = xlrd.open_workbook(file_actual,formatting_info=True)
+book_actual = xlrd.open_workbook(file_actual)
 sheet_actual = book_actual.sheet_by_index(0)
 
 
 #read the fields name
 fields = []
 for c in range(7,sheet_expected.ncols):
-	fields.append(sheet_expected.cell(1,c))
+	fields.append(str(sheet_expected.cell(0,c)))
 
 
 #reads all the required columns of expected sheet
 expected_field_dict = {}
 
 for c in range(7,sheet_expected.ncols):
-	header = sheet_expected.cell(1,c)
+	header = sheet_expected.cell(0,c)
 	col_data=[]
 
-	for r in range(2,sheet_expected.nrows):
+	for r in range(1,sheet_expected.nrows):
 		col_data.append(str(sheet_expected.cell(r,c)))
+	print str(header)
+	expected_field_dict[str(header)] = col_data
 
-	expected_field_dict[header] = col_data
-
+print '*'*50
 #reads all the required cols of the actual sheet
 actual_field_dict = {}
 
 for c in range(7,sheet_actual.ncols):
-	header = sheet_actual.cell(1,c)
+	header = sheet_actual.cell(0,c)
+	print str(header)
 	col_data = []
 
-	for r in range(2,sheet_actual.nrows):
+	for r in range(1,sheet_actual.nrows):
 		col_data.append(str(sheet_actual.cell(r,c)))
 
-	actual_field_dict[header] = col_data
+	actual_field_dict[str(header)] = col_data
 
+# print actual_field_dict
 #creates the check cols for each field
 field_check_dict = {}
 for f in fields:
@@ -62,7 +65,7 @@ for f in fields:
 	field_check_dict[f] = check_list
 
 
-# write the new check cols
+write the new check cols
 wb = copy(book_actual)
 w_sheet = wb.get_sheet(0)
 
